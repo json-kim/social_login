@@ -40,5 +40,13 @@ class AuthViewModel with ChangeNotifier {
   Future<void> _loginWithFacebook() async {}
   Future<void> _loginWithTwitter() async {}
   Future<void> _loginWithYahoo() async {}
-  Future<void> _logout() async {}
+
+  Future<void> _logout() async {
+    final result = await _logoutUseCase();
+
+    result.when(
+      success: (_) {},
+      error: (error) {},
+    );
+  }
 }

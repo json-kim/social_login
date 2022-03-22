@@ -1,7 +1,6 @@
-abstract class AuthApi {
-  Future<void> signOut();
-}
+import 'package:firebase_auth/firebase_auth.dart';
 
-abstract class SdkApi {
-  Future<OAuthCredential> signIn();
+abstract class AuthApi {
+  Future<UserCredential> signIn();
+  Future<void> signOut();
 }

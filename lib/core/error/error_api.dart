@@ -11,7 +11,7 @@ class ErrorApi {
       logger.e('${e.runtimeType}: 에러 발생', e);
       return Result.error(e);
     } catch (e) {
-      logger.e('${e.runtimeType}: 에러 발생');
+      logger.e('${e.runtimeType}: 에러 발생, $e', e);
       return Result.error(BaseException('Auth 에러 발생'));
     }
   }

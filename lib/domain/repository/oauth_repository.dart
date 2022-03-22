@@ -6,11 +6,9 @@ import 'package:social_login/domain/usecase/auth/social_login_use_case.dart';
 abstract class OAuthRepository {
   Future<UserModel> getUserData();
 
-  Future<AuthCredential> getCredential();
+  Future<UserCredential> signIn();
 
-  Future<String> getCustomToken();
-
-  Future<void> logout();
+  Future<void> signOut();
 
   void setOAuthApi(LoginMethod loginMethod);
 }

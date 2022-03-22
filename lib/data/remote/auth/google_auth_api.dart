@@ -17,10 +17,10 @@ class GoogleAuthApi implements AuthApi {
 
   /// 로그인 메서드
   @override
-  Future<OAuthCredential> signIn() async {
+  Future<UserCredential> signIn() async {
     final credential = await _getCredential();
 
-    return credential;
+    return await _firebaseAuth.signInWithCredential(credential);
   }
 
   Future<OAuthCredential> _getCredential() async {

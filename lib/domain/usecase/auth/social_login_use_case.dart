@@ -1,47 +1,32 @@
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:logger/logger.dart';
+import 'package:social_login/core/error/error_api.dart';
 import 'package:social_login/core/result/result.dart';
-import 'package:social_login/domain/model/user_model.dart';
 import 'package:social_login/domain/repository/oauth_repository.dart';
 
 class SocialLoginUseCase {
   final OAuthRepository _repository;
-  final _firebaseAuth = FirebaseAuth.instance;
-  UserModel? _curretUserModel;
+  final _logger = Logger();
 
   SocialLoginUseCase(this._repository);
 
   Future<Result<void>> call(LoginMethod loginMethod) async {
-    _repository.setOAuthApi(loginMethod);
+    return ErrorApi.handleAuthError(() async {
+      // 레포지토리에 로그인 방식 세팅
+      _repository.setOAuthApi(loginMethod);
 
-    final UserCredential userCredential;
+      // 로그인하여 유저 인증서 가져오기
+      final userCredential = await _repository.signIn();
 
-    switch (loginMethod) {
-      case LoginMethod.google:
-      case LoginMethod.apple:
-      case LoginMethod.facebook:
-      case LoginMethod.twitter:
-      case LoginMethod.yahoo:
-        userCredential = await _signInWithOAuthCredential();
-        break;
-      case LoginMethod.kakao:
-      case LoginMethod.naver:
-      default:
-        userCredential = await _signInWithCustomToken();
-        break;
-    }
-    _firebaseAuth.currentUser.
+      // 로그인 성공 후 유저 정보 가져오기(displayName, email, photoUrl)
+      final userData = await _repository.getUserData();
 
-    return Result.success(null);
-  }
+      // 유저 인증서의 정보 수정
+      userCredential.user?.updateDisplayName(userData.userName);
+      userCredential.user?.updateEmail(userData.email);
+      userCredential.user?.updatePhotoURL(userData.photoUrl);
 
-  Future<UserCredential> _signInWithOAuthCredential() async {
-    final oAuthCredential = await _repository.getCredential();
-
-    return await _firebaseAuth.signInWithCredential(oAuthCredential);
-  }
-
-  Future<UserCredential> _signInWithCustomToken() async {
-    throw UnimplementedError();
+      return const Result.success(null);
+    }, _logger);
   }
 }
 

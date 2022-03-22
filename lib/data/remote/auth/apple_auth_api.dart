@@ -1,8 +1,8 @@
-import 'package:social_login/core/result/result.dart';
-
 import 'package:firebase_auth/firebase_auth.dart';
 
-class AppleAuthApi {
+import 'auth_api.dart';
+
+class AppleAuthApi implements AuthApi {
   final _firebaseAuth = FirebaseAuth.instance;
 
   @override

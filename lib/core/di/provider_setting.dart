@@ -1,15 +1,17 @@
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
 import 'package:social_login/data/remote/auth/apple_auth_api.dart';
+import 'package:social_login/data/remote/auth/auth_api.dart';
 import 'package:social_login/data/remote/auth/google_auth_api.dart';
 import 'package:social_login/data/repository/oauth_repository_impl.dart';
 import 'package:social_login/domain/usecase/auth/logout_use_case.dart';
 import 'package:social_login/domain/usecase/auth/social_login_use_case.dart';
 import 'package:social_login/presentation/auth/auth_view_model.dart';
+import 'package:social_login/presentation/home/home_view_model.dart';
 
 Future<List<SingleChildWidget>> setProviders() async {
   // 데이터 소스
-  final apiSet = {
+  final apiSet = <LoginMethod, AuthApi>{
     LoginMethod.google: GoogleAuthApi(),
     LoginMethod.apple: AppleAuthApi(),
   };
