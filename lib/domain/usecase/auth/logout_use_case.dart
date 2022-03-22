@@ -1,8 +1,8 @@
 import 'package:social_login/core/result/result.dart';
-import 'package:social_login/domain/repository/auth_repository.dart';
+import 'package:social_login/domain/repository/oauth_repository.dart';
 
 class LogoutUseCase {
-  final AuthRepository _repository;
+  final OAuthRepository _repository;
 
   LogoutUseCase(
     this._repository,

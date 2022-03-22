@@ -1,4 +1,4 @@
-import 'package:social_login/core/util/social_data.dart';
+import 'package:social_login/domain/usecase/auth/social_login_use_case.dart';
 
 class UserModel {
   String uid;
