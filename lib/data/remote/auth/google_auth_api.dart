@@ -2,6 +2,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:social_login/core/error/auth_exception.dart';
 import 'package:social_login/data/remote/auth/auth_api.dart';
+import 'package:social_login/domain/model/user_response.dart';
+import 'package:social_login/domain/usecase/auth/social_login_use_case.dart';
 
 class GoogleAuthApi implements AuthApi {
   final _firebaseAuth = FirebaseAuth.instance;
@@ -13,6 +15,16 @@ class GoogleAuthApi implements AuthApi {
     this.scopes,
   }) {
     _googleSignIn = GoogleSignIn(scopes: scopes ?? []);
+  }
+
+  @override
+  UserResponse getUserData() {
+    return UserResponse(
+      email: _googleSignInAccount?.email,
+      userName: _googleSignInAccount?.displayName,
+      photoUrl: _googleSignInAccount?.photoUrl,
+      loginMethod: LoginMethod.google,
+    );
   }
 
   /// 로그인 메서드
@@ -53,14 +65,3 @@ class GoogleAuthApi implements AuthApi {
     await _firebaseAuth.signOut();
   }
 }
-
-  // // 새로운 계정으로 로그인 했을 경우 유저 정보 수정하기
-  // Future<void> _updateUserData(UserCredential userCredential) async {
-  //   if (_googleSignInAccount == null) {
-  //     throw BaseException('GoogleSignInAccount is null');
-  //   }
-
-  //   await userCredential.user
-  //       ?.updateDisplayName(_googleSignInAccount!.displayName);
-  //   await userCredential.user?.updatePhotoURL(_googleSignInAccount!.photoUrl);
-  // }

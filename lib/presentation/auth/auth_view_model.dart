@@ -34,7 +34,10 @@ class AuthViewModel with ChangeNotifier {
     );
   }
 
-  Future<void> _loginWithApple() async {}
+  Future<void> _loginWithApple() async {
+    final result = await _socialLoginUseCase(LoginMethod.apple);
+  }
+
   Future<void> _loginWithKakao() async {}
   Future<void> _loginWithNaver() async {}
   Future<void> _loginWithFacebook() async {}

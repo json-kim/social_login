@@ -1,6 +1,8 @@
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:logger/logger.dart';
 import 'package:social_login/core/error/error_api.dart';
 import 'package:social_login/core/result/result.dart';
+import 'package:social_login/domain/model/user_response.dart';
 import 'package:social_login/domain/repository/oauth_repository.dart';
 
 class SocialLoginUseCase {
@@ -18,15 +20,15 @@ class SocialLoginUseCase {
       final userCredential = await _repository.signIn();
 
       // 로그인 성공 후 유저 정보 가져오기(displayName, email, photoUrl)
-      final userData = await _repository.getUserData();
+      final userData =
+          await _repository.getUserData(userCredential.user?.uid ?? '');
 
       // 유저 인증서의 정보 수정
       userCredential.user?.updateDisplayName(userData.userName);
-      userCredential.user?.updateEmail(userData.email);
       userCredential.user?.updatePhotoURL(userData.photoUrl);
 
       return const Result.success(null);
-    }, _logger);
+    }, _logger, '$runtimeType LoginMethod(${loginMethod.name})');
   }
 }
 

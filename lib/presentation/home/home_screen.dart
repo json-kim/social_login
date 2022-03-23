@@ -19,7 +19,15 @@ class HomeScreen extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Image.network('${viewModel.user.photoUrl}'),
+            viewModel.user.photoUrl == ''
+                ? Image.asset(
+                    'asset/image/empty_profile.png',
+                    width: 100,
+                  )
+                : Image.network(
+                    '${viewModel.user.photoUrl}',
+                    width: 100,
+                  ),
             Text('${viewModel.user.userName} 님 안녕하세요'),
             ElevatedButton(
               onPressed: () {

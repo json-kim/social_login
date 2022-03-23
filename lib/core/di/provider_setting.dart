@@ -1,5 +1,7 @@
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
+import 'package:social_login/data/local/user_local_data_source.dart';
 import 'package:social_login/data/remote/auth/apple_auth_api.dart';
 import 'package:social_login/data/remote/auth/auth_api.dart';
 import 'package:social_login/data/remote/auth/google_auth_api.dart';
@@ -7,7 +9,6 @@ import 'package:social_login/data/repository/oauth_repository_impl.dart';
 import 'package:social_login/domain/usecase/auth/logout_use_case.dart';
 import 'package:social_login/domain/usecase/auth/social_login_use_case.dart';
 import 'package:social_login/presentation/auth/auth_view_model.dart';
-import 'package:social_login/presentation/home/home_view_model.dart';
 
 Future<List<SingleChildWidget>> setProviders() async {
   // 데이터 소스
@@ -15,9 +16,11 @@ Future<List<SingleChildWidget>> setProviders() async {
     LoginMethod.google: GoogleAuthApi(),
     LoginMethod.apple: AppleAuthApi(),
   };
+  final _userLocalDataSource =
+      UserLocalDataSource(const FlutterSecureStorage());
 
   // 레포지토리
-  final oauthRepository = OAuthRepositoryImpl(apiSet);
+  final oauthRepository = OAuthRepositoryImpl(apiSet, _userLocalDataSource);
 
   // 유스케이스
   final socialLoginUseCase = SocialLoginUseCase(oauthRepository);
