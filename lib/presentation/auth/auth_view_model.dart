@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
+import 'package:social_login/data/remote/auth/kakao_auth_api.dart';
+import 'package:social_login/domain/model/token_response.dart';
 
 import 'package:social_login/domain/usecase/auth/logout_use_case.dart';
 import 'package:social_login/domain/usecase/auth/social_login_use_case.dart';
@@ -38,7 +41,16 @@ class AuthViewModel with ChangeNotifier {
     final result = await _socialLoginUseCase(LoginMethod.apple);
   }
 
-  Future<void> _loginWithKakao() async {}
+  Future<void> _loginWithKakao() async {
+    final kakaoAuthApi = KakaoAuthApi();
+
+    final code = await kakaoAuthApi.requestAuthorizationCode();
+    final tokenResponse = await kakaoAuthApi.requestToken(code);
+    final userResponse =
+        await kakaoAuthApi.getUserData(token: tokenResponse.accessToken);
+    Logger().i(userResponse);
+  }
+
   Future<void> _loginWithNaver() async {}
   Future<void> _loginWithFacebook() async {}
   Future<void> _loginWithTwitter() async {}

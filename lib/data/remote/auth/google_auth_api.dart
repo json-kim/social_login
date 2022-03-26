@@ -18,7 +18,7 @@ class GoogleAuthApi implements AuthApi {
   }
 
   @override
-  UserResponse getUserData() {
+  UserResponse getUserData({String? token}) {
     return UserResponse(
       email: _googleSignInAccount?.email,
       userName: _googleSignInAccount?.displayName,

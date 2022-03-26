@@ -38,7 +38,7 @@ class AppleAuthApi implements AuthApi {
   }
 
   @override
-  UserResponse getUserData() {
+  UserResponse getUserData({String? token}) {
     return UserResponse(
       uid: uid,
       email: _appleCredential?.email,
