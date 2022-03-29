@@ -1,7 +1,6 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:logger/logger.dart';
-import 'package:social_login/data/remote/auth/kakao_auth_api.dart';
-import 'package:social_login/domain/model/token_response.dart';
+import 'package:social_login/domain/usecase/auth/kakao_login_use_case.dart';
 
 import 'package:social_login/domain/usecase/auth/logout_use_case.dart';
 import 'package:social_login/domain/usecase/auth/social_login_use_case.dart';
@@ -9,9 +8,11 @@ import 'package:social_login/presentation/auth/auth_event.dart';
 
 class AuthViewModel with ChangeNotifier {
   final SocialLoginUseCase _socialLoginUseCase;
+  final KakaoLoginUseCase _kakaoLoginUseCase;
   final LogoutUseCase _logoutUseCase;
 
-  AuthViewModel(this._socialLoginUseCase, this._logoutUseCase);
+  AuthViewModel(
+      this._socialLoginUseCase, this._kakaoLoginUseCase, this._logoutUseCase);
 
   void onEvent(AuthEvent event) {
     event.when(
@@ -42,13 +43,7 @@ class AuthViewModel with ChangeNotifier {
   }
 
   Future<void> _loginWithKakao() async {
-    final kakaoAuthApi = KakaoAuthApi();
-
-    final code = await kakaoAuthApi.requestAuthorizationCode();
-    final tokenResponse = await kakaoAuthApi.requestToken(code);
-    final userResponse =
-        await kakaoAuthApi.getUserData(token: tokenResponse.accessToken);
-    Logger().i(userResponse);
+    await _kakaoLoginUseCase();
   }
 
   Future<void> _loginWithNaver() async {}
@@ -60,8 +55,9 @@ class AuthViewModel with ChangeNotifier {
     final result = await _logoutUseCase();
 
     result.when(
-      success: (_) {},
-      error: (error) {},
-    );
+        success: (_) {},
+        error: (error) {
+          print('TODO: 로그 아웃 에러');
+        });
   }
 }

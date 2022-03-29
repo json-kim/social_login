@@ -28,8 +28,8 @@ class UserLocalDataSource {
   Future<UserResponse> loadUserData(LoginMethod loginMethod) async {
     final social = loginMethod.name;
 
-    final email = await secureStorage.read(key: social + '.email');
     final uid = await secureStorage.read(key: social + '.uid');
+    final email = await secureStorage.read(key: social + '.email');
     final userName = await secureStorage.read(key: social + '.userName');
     final photoUrl = await secureStorage.read(key: social + '.photoUrl');
 

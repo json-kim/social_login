@@ -1,8 +1,6 @@
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:logger/logger.dart';
 import 'package:social_login/core/error/error_api.dart';
 import 'package:social_login/core/result/result.dart';
-import 'package:social_login/domain/model/user_response.dart';
 import 'package:social_login/domain/repository/oauth_repository.dart';
 
 class SocialLoginUseCase {
