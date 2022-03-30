@@ -1,31 +1,27 @@
 import 'package:dio/dio.dart';
 import 'package:logger/logger.dart';
 import 'package:social_login/data/local/token_local_data_source.dart';
-
-import 'package:social_login/data/remote/auth/kakao_auth_api.dart';
+import 'package:social_login/data/remote/auth/naver_auth_api.dart';
 import 'package:social_login/domain/usecase/auth/social_login_use_case.dart';
-import 'package:social_login/service/kakao/kakao_constants.dart';
+import 'package:social_login/service/naver/naver_constants.dart';
 
-class TokenInterceptor extends Interceptor {
+class NaverTokenInterceptor extends Interceptor {
   final Dio _dio;
   final TokenLocalDataSource _tokenManager;
-  final KakaoAuthApi _kakaoAuthApi;
+  final NaverAuthApi _naverAuthApi;
 
-  TokenInterceptor(
-    this._dio,
-    this._tokenManager,
-    this._kakaoAuthApi,
-  );
+  NaverTokenInterceptor(this._dio, this._tokenManager, this._naverAuthApi);
 
   @override
   void onRequest(
       RequestOptions options, RequestInterceptorHandler handler) async {
-    // 로컬에서 카카오 토큰 가져오기
-    final token = await _tokenManager.loadAccessToken(LoginMethod.kakao);
+    // 로컬에서 네이버 토큰 가져오기
+    final accessToken = await _tokenManager.loadAccessToken(LoginMethod.naver);
 
     // 헤더에 토큰 추가
-    options.headers[KakaoConstants.autorization] =
-        '${KakaoConstants.bearer} $token';
+    options.headers = {
+      NaverConstants.authorization: '${NaverConstants.bearer} $accessToken',
+    };
     handler.next(options);
   }
 
@@ -33,7 +29,7 @@ class TokenInterceptor extends Interceptor {
   void onError(DioError err, ErrorInterceptorHandler handler) async {
     final options = err.response?.requestOptions;
     final request = err.requestOptions;
-    final token = await _tokenManager.loadAccessToken(LoginMethod.kakao);
+    final token = await _tokenManager.loadAccessToken(LoginMethod.naver);
 
     // 토큰 유효 문제가 아닌 경우(토큰 갱신으로 문제가 해결되지 않을 때)
     if (options == null || token == null || err.response?.statusCode != 401) {
@@ -43,8 +39,8 @@ class TokenInterceptor extends Interceptor {
 
     try {
       // 중간에 토큰이 갱신되었을지도 모르니, 요청시의 토큰과 현재의 토큰이 다르다면 재요청 시도
-      if (request.headers[KakaoConstants.autorization] !=
-          '${KakaoConstants.bearer} $token') {
+      if (request.headers[NaverConstants.authorization] !=
+          '${NaverConstants.bearer} $token') {
         final response = await _dio.fetch(options);
         handler.resolve(response);
         return;
@@ -57,15 +53,15 @@ class TokenInterceptor extends Interceptor {
 
       // 리프레시 토큰으로 액세스 토큰 갱신하고
       final refreshToken =
-          await _tokenManager.loadRefreshToken(LoginMethod.kakao);
-      final newToken = await _kakaoAuthApi.refreshAccessToken(refreshToken!);
+          await _tokenManager.loadRefreshToken(LoginMethod.naver);
+      final newToken = await _naverAuthApi.refreshAccessToken(refreshToken!);
       // 로컬에 저장하고
-      _tokenManager.saveAccessToken(LoginMethod.kakao, newToken.accessToken);
-      _tokenManager.saveRefreshToken(LoginMethod.kakao, newToken.refreshToken);
+      _tokenManager.saveAccessToken(LoginMethod.naver, newToken.accessToken);
+      _tokenManager.saveRefreshToken(LoginMethod.naver, newToken.refreshToken);
 
       // 재요청하기
-      options.headers[KakaoConstants.autorization] =
-          '${KakaoConstants.bearer} $token';
+      options.headers[NaverConstants.authorization] =
+          '${NaverConstants.bearer} $token';
 
       _dio.unlock();
 
@@ -74,8 +70,8 @@ class TokenInterceptor extends Interceptor {
     } catch (e) {
       // 만약 리프레시 토큰으로도 요청이 실패한다면(예를 들어 만료되어서)
       // 토큰 매니저 지워주기
-      await _tokenManager.deleteAccessToken(LoginMethod.kakao);
-      await _tokenManager.deleteRefreshToken(LoginMethod.kakao);
+      await _tokenManager.deleteAccessToken(LoginMethod.naver);
+      await _tokenManager.deleteRefreshToken(LoginMethod.naver);
 
       handler.reject(err);
     } finally {

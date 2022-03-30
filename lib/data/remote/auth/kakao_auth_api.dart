@@ -1,12 +1,6 @@
-import 'dart:convert';
-
 import 'package:dio/dio.dart';
 import 'package:flutter_web_auth/flutter_web_auth.dart';
-import 'package:logger/logger.dart';
 import 'package:social_login/domain/model/token_response.dart';
-import 'package:social_login/domain/model/user_response.dart';
-import 'package:http/http.dart' as http;
-import 'package:social_login/domain/usecase/auth/social_login_use_case.dart';
 import 'package:social_login/service/kakao/kakao_api_factory.dart';
 import 'package:social_login/service/kakao/kakao_constants.dart';
 
@@ -54,6 +48,7 @@ class KakaoAuthApi {
     return tokenResponse;
   }
 
+  // 액세스 토큰 갱신
   Future<TokenResponse> refreshAccessToken(String refreshToken) async {
     final body = {
       KakaoConstants.grantType: 'refresh_token',

@@ -10,8 +10,9 @@ class KakaoApiFactory {
 
   static Dio _authApiInstance() {
     var dio = Dio();
-    dio.options.baseUrl = '${KakaoConstants.scheme}://${KakaoConstants.kauth}';
-    dio.options.contentType = KakaoConstants.contentType;
+    dio.options.baseUrl =
+        '${KakaoConstants.scheme}://${KakaoConstants.kauth}'; // 베이스 url 추가
+    dio.options.contentType = KakaoConstants.contentType; // 콘텐츠 타입 추가
     dio.interceptors.addAll([
       LogInterceptor(), // 로그 인터셉터
     ]);
@@ -20,8 +21,9 @@ class KakaoApiFactory {
 
   static Dio _tokenApiInstatnce() {
     var dio = Dio();
-    dio.options.baseUrl = '${KakaoConstants.scheme}://${KakaoConstants.kapi}';
-    dio.options.contentType = KakaoConstants.contentType;
+    dio.options.baseUrl =
+        '${KakaoConstants.scheme}://${KakaoConstants.kapi}'; // 베이스 url 추가
+    dio.options.contentType = KakaoConstants.contentType; // 콘텐츠 타입 추가
     dio.interceptors.addAll([
       TokenInterceptor(
           dio, TokenLocalDataSource.instance, KakaoAuthApi.instance), // 토큰 인터셉터

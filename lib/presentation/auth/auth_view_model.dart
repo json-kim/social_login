@@ -3,16 +3,18 @@ import 'package:flutter/material.dart';
 import 'package:social_login/domain/usecase/auth/kakao_login_use_case.dart';
 
 import 'package:social_login/domain/usecase/auth/logout_use_case.dart';
+import 'package:social_login/domain/usecase/auth/naver_login_use_case.dart';
 import 'package:social_login/domain/usecase/auth/social_login_use_case.dart';
 import 'package:social_login/presentation/auth/auth_event.dart';
 
 class AuthViewModel with ChangeNotifier {
   final SocialLoginUseCase _socialLoginUseCase;
   final KakaoLoginUseCase _kakaoLoginUseCase;
+  final NaverLoginUseCase _naverLoginUseCase;
   final LogoutUseCase _logoutUseCase;
 
-  AuthViewModel(
-      this._socialLoginUseCase, this._kakaoLoginUseCase, this._logoutUseCase);
+  AuthViewModel(this._socialLoginUseCase, this._kakaoLoginUseCase,
+      this._naverLoginUseCase, this._logoutUseCase);
 
   void onEvent(AuthEvent event) {
     event.when(
@@ -46,7 +48,10 @@ class AuthViewModel with ChangeNotifier {
     await _kakaoLoginUseCase();
   }
 
-  Future<void> _loginWithNaver() async {}
+  Future<void> _loginWithNaver() async {
+    await _naverLoginUseCase();
+  }
+
   Future<void> _loginWithFacebook() async {}
   Future<void> _loginWithTwitter() async {}
   Future<void> _loginWithYahoo() async {}

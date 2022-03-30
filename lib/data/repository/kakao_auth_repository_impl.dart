@@ -1,17 +1,19 @@
 import 'package:social_login/data/remote/auth/kakao_auth_api.dart';
 import 'package:social_login/data/remote/auth/kakao_user_api.dart';
-import 'package:social_login/data/remote/firebase/firebase_auth_remote_data_source.dart';
 import 'package:social_login/domain/model/token_response.dart';
 import 'package:social_login/domain/model/user_response.dart';
+import 'package:social_login/domain/repository/oauth_api_repository.dart';
 
-class KakaoAuthRepositoryImpl {
+class KakaoAuthRepositoryImpl implements OAuthApiRepository {
   final KakaoAuthApi _kakaoAuthApi;
   final KakaoUserApi _kakaoUserAPi;
-  final FirebaseAuthRemoteDataSource _firebaseAuthRemoteDataSource;
 
-  KakaoAuthRepositoryImpl(this._kakaoAuthApi, this._kakaoUserAPi,
-      this._firebaseAuthRemoteDataSource);
+  KakaoAuthRepositoryImpl(
+    this._kakaoAuthApi,
+    this._kakaoUserAPi,
+  );
 
+  @override
   Future<TokenResponse> login() async {
     final authCode = await _kakaoAuthApi.requestAuthorizationCode();
 
@@ -20,15 +22,13 @@ class KakaoAuthRepositoryImpl {
     return token;
   }
 
-  Future<UserResponse> getUserData(String accessToken) async {
-    return await _kakaoUserAPi.getUserData(accessToken);
+  @override
+  Future<UserResponse> getUserData() async {
+    return await _kakaoUserAPi.getUserData();
   }
 
-  Future<void> logout(String accessToken) async {
-    await _kakaoUserAPi.signOut(accessToken);
-  }
-
-  Future<String> createCustomToken(UserResponse userResponse) async {
-    return await _firebaseAuthRemoteDataSource.requestCustomToken(userResponse);
+  @override
+  Future<void> logout() async {
+    await _kakaoUserAPi.signOut();
   }
 }

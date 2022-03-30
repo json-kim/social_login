@@ -1,17 +1,16 @@
 import 'package:dio/dio.dart';
-import 'package:social_login/service/kakao/kakao_exception.dart';
+import 'package:social_login/service/naver/naver_exception.dart';
 
-class KakaoExceptionHandler {
+class NaverExceptionHandler {
   static Future<T> handleApiError<T>(
       Future<T> Function() requestFunction) async {
     try {
       return await requestFunction();
     } on DioError catch (e) {
       if (e.response?.statusCode == 401) {
-        final code = e.response?.data['code'].toString();
-        final message = e.response?.data['msg'];
-
-        throw KakaoTokenException(message: message, code: code);
+        final errorCode = e.response?.data['resultcode'];
+        final message = e.response?.data['message'];
+        throw NaverTokenException(errorCode: errorCode, message: message);
       } else {
         throw e.error;
       }

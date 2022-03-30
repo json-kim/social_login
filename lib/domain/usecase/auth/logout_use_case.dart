@@ -19,18 +19,12 @@ class LogoutUseCase {
 
   Future<Result<void>> call() async {
     return ErrorApi.handleAuthError(() async {
-      // 카카오 토큰 가져오기
-      _tokenRepository.saveAccessToken(LoginMethod.kakao, 'test access');
-      _tokenRepository.saveRefreshToken(LoginMethod.kakao, 'test refresh');
-      final token = await _tokenRepository.loadAccessToken(LoginMethod.kakao);
-
       // 토큰 만료 처리는 인터셉터 사용
       // 로그아웃
-      if (token != null) {
-        await _kakaoAuthRepository.logout(token);
-      }
+      // 로그인 방법별로 분기 나눠서 로그인 처리
+      await _kakaoAuthRepository.logout();
 
-      // await _firebaseAuth.signOut();
+      await _firebaseAuth.signOut();
       return const Result.success(null);
     }, _logger, '$runtimeType');
   }

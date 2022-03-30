@@ -14,19 +14,20 @@ class KakaoUserApi {
   static final instance = KakaoUserApi();
 
   // 카카오 로그아웃 (토큰 서버에서 만료)
-  Future<void> signOut(String accessToken) async {
+  Future<void> signOut() async {
     await KakaoExceptionHandler.handleApiError(() async {
       await _tokenDio.post(KakaoConstants.logoutPath);
     });
   }
 
   // 유저 정보 가져오기
-  Future<UserResponse> getUserData(String token) async {
+  Future<UserResponse> getUserData() async {
     return await KakaoExceptionHandler.handleApiError(() async {
       final response = await _tokenDio.get(KakaoConstants.userPath);
 
       final userMap = response.data;
 
+      final id = userMap['id'].toString();
       final userName =
           userMap['kakao_account']['profile']['nickname'] as String;
       final email = userMap['kakao_account']['email'] as String;
@@ -34,6 +35,7 @@ class KakaoUserApi {
           userMap['kakao_account']['profile']['profile_image_url'] as String;
 
       final userResponse = UserResponse(
+        uid: id,
         email: email,
         userName: userName,
         photoUrl: photoUrl,

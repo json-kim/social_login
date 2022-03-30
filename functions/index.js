@@ -26,12 +26,25 @@ exports.kakaologout = functions.https.onRequest((request, response) => {
 // 카카오 커스텀 토큰 생성 함수
 exports.createCustomTokenKakao = functions.https.onRequest(async (request, response) => {
   const user = request.body;
-
+  
   const userRecord = await updateOrCreateUser(user);
-  await admin.auth().setCustomUserClaims(userRecord.uid, { kakaoUID: 'kakao test id', provider: "kakao.com" });
+  await admin.auth().setCustomUserClaims(userRecord.uid, { kakaoUID: user['uid'], provider: "kakao.com" });
 
-  const customToken = await admin.auth().createCustomToken(userRecord.uid, { kakaoUID: 'kakao test id', provider: "kakao.com" });
+  functions.logger.info(userRecord);
+
+  const customToken = await admin.auth().createCustomToken(userRecord.uid, { kakaoUID: user['uid'], provider: "kakao.com" });
   response.send(customToken);
+});
+
+// 네이버 로그인 리디렉트 함수
+exports.naverlogin = functions.https.onRequest((request, response) => {
+  functions.logger.info('네이버 로그인 리디렉트 함수');
+  functions.logger.info(request.query.code);
+  functions.logger.info(request.query.state);
+  const code = request.query.code;
+  const state = request.query.state;
+
+  response.redirect(`naverlogincallback://success?code=${code}&state=${state}`);
 });
 
 // 네이버 커스텀 토큰 생성 함수
@@ -39,9 +52,11 @@ exports.createCustomTokenNaver = functions.https.onRequest(async (request, respo
   const user = request.body;
 
   const userRecord = await updateOrCreateUser(user);
-  await admin.auth().setCustomUserClaims(userRecord.uid, { kakaoUID: 'naver test id', provider: "naver.com" });
+  await admin.auth().setCustomUserClaims(userRecord.uid, { naverUID: user['uid'], naverProvider: "naver.com" });
 
-  const customToken = await admin.auth().createCustomToken(userRecord.uid, { kakaoUID: 'kakao test id', provider: "kakao.com" });
+  functions.logger.info(userRecord);
+
+  const customToken = await admin.auth().createCustomToken(userRecord.uid, { naverUID: user['uid'], naverProvider: "naver.com" });
   response.send(customToken);
 });
 
