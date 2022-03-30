@@ -1,20 +1,26 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:social_login/domain/usecase/auth/apple_login_use_case.dart';
+import 'package:social_login/domain/usecase/auth/google_login_use_case.dart';
 import 'package:social_login/domain/usecase/auth/kakao_login_use_case.dart';
 
 import 'package:social_login/domain/usecase/auth/logout_use_case.dart';
 import 'package:social_login/domain/usecase/auth/naver_login_use_case.dart';
-import 'package:social_login/domain/usecase/auth/social_login_use_case.dart';
 import 'package:social_login/presentation/auth/auth_event.dart';
 
 class AuthViewModel with ChangeNotifier {
-  final SocialLoginUseCase _socialLoginUseCase;
+  final GoogleLoginUseCase _googleLoginUseCase;
+  final AppleLoginUseCase _appleLoginUseCase;
   final KakaoLoginUseCase _kakaoLoginUseCase;
   final NaverLoginUseCase _naverLoginUseCase;
   final LogoutUseCase _logoutUseCase;
 
-  AuthViewModel(this._socialLoginUseCase, this._kakaoLoginUseCase,
-      this._naverLoginUseCase, this._logoutUseCase);
+  AuthViewModel(
+    this._googleLoginUseCase,
+    this._appleLoginUseCase,
+    this._kakaoLoginUseCase,
+    this._naverLoginUseCase,
+    this._logoutUseCase,
+  );
 
   void onEvent(AuthEvent event) {
     event.when(
@@ -30,18 +36,11 @@ class AuthViewModel with ChangeNotifier {
   }
 
   Future<void> _loginWithGoogle() async {
-    final result = await _socialLoginUseCase(LoginMethod.google);
-
-    result.when(
-      success: (_) {},
-      error: (error) {
-        // 에러시 ui 이벤트 발생
-      },
-    );
+    await _googleLoginUseCase();
   }
 
   Future<void> _loginWithApple() async {
-    final result = await _socialLoginUseCase(LoginMethod.apple);
+    await _appleLoginUseCase();
   }
 
   Future<void> _loginWithKakao() async {

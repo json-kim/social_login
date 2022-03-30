@@ -1,4 +1,4 @@
-import 'package:social_login/domain/usecase/auth/social_login_use_case.dart';
+import 'package:social_login/domain/usecase/auth/constants.dart';
 
 class UserResponse {
   String? uid;

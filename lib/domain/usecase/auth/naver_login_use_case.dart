@@ -3,7 +3,7 @@ import 'package:social_login/domain/repository/fauth_repository.dart';
 import 'package:social_login/domain/repository/oauth_api_repository.dart';
 import 'package:social_login/domain/repository/token_repository.dart';
 import 'package:social_login/domain/repository/user_repository.dart';
-import 'package:social_login/domain/usecase/auth/social_login_use_case.dart';
+import 'package:social_login/domain/usecase/auth/constants.dart';
 
 class NaverLoginUseCase {
   final FirebaseAuth _auth = FirebaseAuth.instance;

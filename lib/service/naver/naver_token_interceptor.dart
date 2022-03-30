@@ -1,8 +1,7 @@
 import 'package:dio/dio.dart';
-import 'package:logger/logger.dart';
 import 'package:social_login/data/local/token_local_data_source.dart';
 import 'package:social_login/data/remote/auth/naver_auth_api.dart';
-import 'package:social_login/domain/usecase/auth/social_login_use_case.dart';
+import 'package:social_login/domain/usecase/auth/constants.dart';
 import 'package:social_login/service/naver/naver_constants.dart';
 
 class NaverTokenInterceptor extends Interceptor {

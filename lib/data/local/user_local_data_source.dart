@@ -1,7 +1,6 @@
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:logger/logger.dart';
 import 'package:social_login/domain/model/user_response.dart';
-import 'package:social_login/domain/usecase/auth/social_login_use_case.dart';
+import 'package:social_login/domain/usecase/auth/constants.dart';
 
 /// flutter_secure_storage 사용해서 유저정보 로컬에 저장
 class UserLocalDataSource {

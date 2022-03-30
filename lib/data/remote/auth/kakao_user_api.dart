@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:social_login/domain/model/user_response.dart';
-import 'package:social_login/domain/usecase/auth/social_login_use_case.dart';
+import 'package:social_login/domain/usecase/auth/constants.dart';
 import 'package:social_login/service/kakao/kakao_api_factory.dart';
 import 'package:social_login/service/kakao/kakao_constants.dart';
 import 'package:social_login/service/kakao/kakao_exception_handler.dart';

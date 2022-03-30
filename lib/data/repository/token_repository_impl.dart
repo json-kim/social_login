@@ -1,6 +1,6 @@
 import 'package:social_login/data/local/token_local_data_source.dart';
 import 'package:social_login/domain/repository/token_repository.dart';
-import 'package:social_login/domain/usecase/auth/social_login_use_case.dart';
+import 'package:social_login/domain/usecase/auth/constants.dart';
 
 class TokenRepositoryImpl implements TokenRepository {
   final TokenLocalDataSource _tokenLocalDataSource;

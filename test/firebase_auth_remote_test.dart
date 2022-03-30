@@ -2,7 +2,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:logger/logger.dart';
 import 'package:social_login/data/remote/firebase/firebase_auth_remote_data_source.dart';
 import 'package:social_login/domain/model/user_response.dart';
-import 'package:social_login/domain/usecase/auth/social_login_use_case.dart';
+import 'package:social_login/domain/usecase/auth/constants.dart';
 
 void main() {
   test('커스텀 토큰 발급', () async {

@@ -3,51 +3,22 @@ import 'dart:math';
 
 import 'package:crypto/crypto.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:logger/logger.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
+import 'package:social_login/data/remote/auth/apple_auth_result.dart';
 
-import 'package:social_login/core/error/auth_exception.dart';
-import 'package:social_login/domain/model/user_response.dart';
-import 'package:social_login/domain/usecase/auth/social_login_use_case.dart';
-
-import 'auth_api.dart';
-
-class AppleAuthApi implements AuthApi {
-  final List<AppleIDAuthorizationScopes> scopes;
-  final _firebaseAuth = FirebaseAuth.instance;
-  AuthorizationCredentialAppleID? _appleCredential;
-  String? uid;
+class AppleAuthApi {
+  final List<AppleIDAuthorizationScopes> _scopes;
 
   AppleAuthApi({
-    scopes,
-  }) : scopes = scopes ??
+    List<AppleIDAuthorizationScopes>? scopes,
+  }) : _scopes = scopes ??
             [
               AppleIDAuthorizationScopes.email,
               AppleIDAuthorizationScopes.fullName,
             ];
 
-  @override
-  Future<UserCredential> signIn() async {
-    final oauthCredential = await _getCredential();
-
-    final userCredential =
-        await FirebaseAuth.instance.signInWithCredential(oauthCredential);
-    uid = userCredential.user?.uid;
-
-    return userCredential;
-  }
-
-  @override
-  UserResponse getUserData({String? token}) {
-    return UserResponse(
-      uid: uid,
-      email: _appleCredential?.email,
-      userName: _appleCredential?.givenName,
-      loginMethod: LoginMethod.apple,
-    );
-  }
-
-  Future<AuthCredential> _getCredential() async {
+  // 애플 로그인 (애플 유저 정보, 인가 코드, id 토큰 리턴)
+  Future<AppleAuthResult> requestSignInAccount() async {
     // 애플 인증정보를 다시 실행?시키는 어떠한 공격을 방지하기 위해 인증 요청에 32자리 문자열을 포함시킵니다.
     // 우선 애플 로그인에 암호화시킨 32자리 문자열을 포함시키고
     // 파이어베이스로 로그인할 때, 원본 문자열을 포함시키면
@@ -55,31 +26,26 @@ class AppleAuthApi implements AuthApi {
     final rawNonce = _generateNonce();
     final nonce = _sha256ofString(rawNonce);
 
-    // 애플 계정으로 애플에 인증 요청
-    _appleCredential = await SignInWithApple.getAppleIDCredential(
-      scopes: [
-        AppleIDAuthorizationScopes.email,
-        AppleIDAuthorizationScopes.fullName,
-      ],
-      nonce: nonce,
-    );
+    final appleAccount = await SignInWithApple.getAppleIDCredential(
+        scopes: _scopes, nonce: nonce);
 
-    if (_appleCredential == null) {
-      throw BaseException('애플 로그인 실패');
-    }
-
-    // 애플로부터 리턴받은 인증 id 토큰으로 OAuth 인증정보 생성
-    final oauthCredential = OAuthProvider("apple.com").credential(
-      idToken: _appleCredential!.identityToken,
-      rawNonce: rawNonce,
-    );
-
-    return oauthCredential;
+    return AppleAuthResult(appleAccount, rawNonce);
   }
 
-  @override
-  Future<void> signOut() {
-    throw BaseException('Apple does not support sign up');
+  // oauth 인증서 발급
+  Future<AuthCredential> requestAuthCredential(
+      AppleAuthResult authResult) async {
+    // 애플로부터 리턴받은 인증 id 토큰으로 OAuth 인증정보 생성
+    final authCredential = OAuthProvider("apple.com").credential(
+      idToken: authResult.account.identityToken,
+      rawNonce: authResult.rawNonce,
+    );
+
+    return authCredential;
+  }
+
+  Future<void> signOut() async {
+    // 애플은 로그아웃을 지원하지 않음
   }
 
   /// 안전한 램덤 문자열 생성 메서드

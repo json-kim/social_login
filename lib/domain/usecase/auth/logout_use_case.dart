@@ -4,7 +4,6 @@ import 'package:social_login/core/error/error_api.dart';
 import 'package:social_login/core/result/result.dart';
 import 'package:social_login/data/repository/kakao_auth_repository_impl.dart';
 import 'package:social_login/domain/repository/token_repository.dart';
-import 'package:social_login/domain/usecase/auth/social_login_use_case.dart';
 
 class LogoutUseCase {
   final TokenRepository _tokenRepository;

@@ -1,7 +1,7 @@
 import 'package:social_login/data/local/user_local_data_source.dart';
 import 'package:social_login/domain/model/user_response.dart';
 import 'package:social_login/domain/repository/user_repository.dart';
-import 'package:social_login/domain/usecase/auth/social_login_use_case.dart';
+import 'package:social_login/domain/usecase/auth/constants.dart';
 
 class UserRepositoryImpl implements UserRepository {
   final UserLocalDataSource _userLocalDataSource;
