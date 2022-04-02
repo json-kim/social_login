@@ -8,9 +8,9 @@ import 'package:social_login/service/naver/naver_exception.dart';
 /// 유스케이스 단에서 에러 핸들링 메서드
 class ErrorApi {
   static Future<Result<T>> handleAuthError<T>(
-      Future<Result<T>> Function() requestFunction,
-      Logger logger,
-      String prefix) async {
+      Future<Result<T>> Function() requestFunction, String prefix,
+      {Logger? logger}) async {
+    logger = Logger();
     try {
       return await requestFunction();
     } on Exception catch (e) {

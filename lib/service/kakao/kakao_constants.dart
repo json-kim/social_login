@@ -11,6 +11,7 @@ class KakaoConstants {
   static const String redirectUri = 'redirect_uri';
   static const String grantType = 'grant_type';
   static const String code = 'code';
+  static const String authorizationCode = 'authorization_code';
   static const String refreshToken = 'refresh_token';
 
   static const String tokenPath = '/oauth/token';

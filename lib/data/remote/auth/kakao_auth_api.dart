@@ -14,9 +14,9 @@ class KakaoAuthApi {
   // 인가 코드 발급
   Future<String> requestAuthorizationCode() async {
     final url = Uri.https('kauth.kakao.com', '/oauth/authorize', {
-      'response_type': 'code',
-      'client_id': 'c566e2fcfa4c8b7497bf3ca6919197ac',
-      'redirect_uri':
+      KakaoConstants.responseType: KakaoConstants.code,
+      KakaoConstants.clientId: 'c566e2fcfa4c8b7497bf3ca6919197ac',
+      KakaoConstants.redirectUri:
           'https://us-central1-appfirebase-656ab.cloudfunctions.net/kakaologin',
     });
 
@@ -33,7 +33,7 @@ class KakaoAuthApi {
   // 토큰 발급
   Future<TokenResponse> requestToken(String authCode) async {
     final body = {
-      KakaoConstants.grantType: 'authorization_code',
+      KakaoConstants.grantType: KakaoConstants.authorizationCode,
       KakaoConstants.clientId: 'c566e2fcfa4c8b7497bf3ca6919197ac',
       KakaoConstants.redirectUri:
           'https://us-central1-appfirebase-656ab.cloudfunctions.net/kakaologin',

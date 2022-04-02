@@ -60,7 +60,13 @@ Future<List<SingleChildWidget>> setProviders() async {
   );
   final googleLoginUseCase = GoogleLoginUseCase(googleRepository);
   final appleLoginUseCase = AppleLoginUseCase(appleRepository);
-  final logoutUseCase = LogoutUseCase(tokenRepository, kakaoRepository);
+  final logoutUseCase = LogoutUseCase(
+    tokenRepository,
+    googleRepository,
+    appleRepository,
+    kakaoRepository,
+    naverRepository,
+  );
 
   // 뷰모델
   final List<SingleChildWidget> viewModels = [

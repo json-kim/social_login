@@ -52,11 +52,11 @@ exports.createCustomTokenNaver = functions.https.onRequest(async (request, respo
   const user = request.body;
 
   const userRecord = await updateOrCreateUser(user);
-  await admin.auth().setCustomUserClaims(userRecord.uid, { naverUID: user['uid'], naverProvider: "naver.com" });
+  await admin.auth().setCustomUserClaims(userRecord.uid, { naverUID: user['uid'], provider: "naver.com" });
 
   functions.logger.info(userRecord);
 
-  const customToken = await admin.auth().createCustomToken(userRecord.uid, { naverUID: user['uid'], naverProvider: "naver.com" });
+  const customToken = await admin.auth().createCustomToken(userRecord.uid, { naverUID: user['uid'], provider: "naver.com" });
   response.send(customToken);
 });
 

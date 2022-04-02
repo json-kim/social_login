@@ -47,7 +47,7 @@ class FirebaseAuthRemoteDataSource {
     };
 
     final response = await _apiDio
-        .post<String>(FunctionsConstants.kakaoTokenPath, data: body);
+        .post<String>(FunctionsConstants.naverTokenPath, data: body);
 
     final token = response.data;
 
