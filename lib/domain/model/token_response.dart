@@ -1,17 +1,19 @@
 class TokenResponse {
+  final String? idToken;
   final String accessToken;
   final String? refreshToken;
 
-  TokenResponse({required this.accessToken, required this.refreshToken});
+  TokenResponse({this.idToken, required this.accessToken, this.refreshToken});
 
   factory TokenResponse.fromJson(Map<String, dynamic> json) {
     return TokenResponse(
-      accessToken: json['access_token'],
-      refreshToken: json['refresh_token'],
+      idToken: json['idToken'] as String?,
+      accessToken: json['access_token'] as String,
+      refreshToken: json['refresh_token'] as String?,
     );
   }
 
   @override
   String toString() =>
-      'TokenResponse(accessToken: $accessToken, refreshToken: $refreshToken)';
+      'TokenResponse(idToken: $idToken, accessToken: $accessToken, refreshToken: $refreshToken)';
 }

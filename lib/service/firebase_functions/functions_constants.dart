@@ -7,6 +7,6 @@ class FunctionsConstants {
 
   static const String uid = 'uid';
   static const String email = 'email';
-  static const String displayName = 'displayName';
-  static const String photoUrl = 'photoURL';
+  static const String displayName = 'userName';
+  static const String photoUrl = 'photoUrl';
 }

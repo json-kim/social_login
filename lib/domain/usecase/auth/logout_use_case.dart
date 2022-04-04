@@ -31,9 +31,7 @@ class LogoutUseCase {
   /// 카카오: custom / claim['provider'] : kakao.com
   Future<Result<void>> call() async {
     return ErrorApi.handleAuthError(() async {
-      // 현재
-      final idTokenResult =
-          await FirebaseAuth.instance.currentUser?.getIdTokenResult();
+      final idTokenResult = await _firebaseAuth.currentUser?.getIdTokenResult();
       final signInProvider = idTokenResult?.signInProvider;
 
       if (signInProvider == 'google.com') {

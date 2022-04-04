@@ -42,5 +42,15 @@ class NaverLoginUseCase {
 
     // 파이어베이스 인증
     await _auth.signInWithCustomToken(customToken);
+
+    // 유저정보 업데이트
+    final currentUser = _auth.currentUser;
+    final idTokenResult = await currentUser?.getIdTokenResult();
+
+    final claims = idTokenResult?.claims;
+    if (claims != null) {
+      await currentUser?.updateDisplayName(claims['naverUserName']);
+      await currentUser?.updatePhotoURL(claims['naverPhotoUrl']);
+    }
   }
 }

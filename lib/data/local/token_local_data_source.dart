@@ -29,6 +29,15 @@ class TokenLocalDataSource {
     return refreshToken;
   }
 
+  /// 아이디 토큰 로드(로컬에서)
+  Future<String?> loadIdToken(LoginMethod loginMethod) async {
+    final social = loginMethod.name;
+
+    final idToken = await _secureStorage.read(key: social + '.id_token');
+
+    return idToken;
+  }
+
   /// 액세스 토큰 저장(로컬에)
   Future<void> saveAccessToken(
       LoginMethod loginMethod, String? accessToken) async {
@@ -49,6 +58,14 @@ class TokenLocalDataSource {
         key: social + '.refresh_token', value: refreshToken);
   }
 
+  /// 아이디 토큰 저장(로컬에)
+  Future<void> saveIdToken(LoginMethod loginMethod, String? idToken) async {
+    if (idToken == null) return;
+    final social = loginMethod.name;
+
+    await _secureStorage.write(key: social + '.id_token', value: idToken);
+  }
+
   /// 액세스 토큰 삭제(로컬에서)
   Future<void> deleteAccessToken(LoginMethod loginMethod) async {
     final social = loginMethod.name;
@@ -61,5 +78,12 @@ class TokenLocalDataSource {
     final social = loginMethod.name;
 
     await _secureStorage.delete(key: social + '.refresh_token');
+  }
+
+  /// 아이디 토큰 삭제(로컬에서)
+  Future<void> deleteIdToken(LoginMethod loginMethod) async {
+    final social = loginMethod.name;
+
+    await _secureStorage.delete(key: social + '.id_token');
   }
 }

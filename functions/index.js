@@ -28,11 +28,11 @@ exports.createCustomTokenKakao = functions.https.onRequest(async (request, respo
   const user = request.body;
   
   const userRecord = await updateOrCreateUser(user);
-  await admin.auth().setCustomUserClaims(userRecord.uid, { kakaoUID: user['uid'], provider: "kakao.com" });
+  await admin.auth().setCustomUserClaims(userRecord.uid, { kakaoUserName: user['userName'], kakaoPhotoUrl: user['photoUrl'], kakaoUID: user['uid'], provider: "kakao.com" });
 
   functions.logger.info(userRecord);
 
-  const customToken = await admin.auth().createCustomToken(userRecord.uid, { kakaoUID: user['uid'], provider: "kakao.com" });
+  const customToken = await admin.auth().createCustomToken(userRecord.uid, { kakaoUserName: user['userName'], kakaoPhotoUrl: user['photoUrl'], kakaoUID: user['uid'], provider: "kakao.com" });
   response.send(customToken);
 });
 
@@ -52,11 +52,11 @@ exports.createCustomTokenNaver = functions.https.onRequest(async (request, respo
   const user = request.body;
 
   const userRecord = await updateOrCreateUser(user);
-  await admin.auth().setCustomUserClaims(userRecord.uid, { naverUID: user['uid'], provider: "naver.com" });
+  await admin.auth().setCustomUserClaims(userRecord.uid, { naverUserName: user['userName'], naverPhotoUrl: user['photoUrl'], naverUID: user['uid'], provider: "naver.com" });
 
   functions.logger.info(userRecord);
 
-  const customToken = await admin.auth().createCustomToken(userRecord.uid, { naverUID: user['uid'], provider: "naver.com" });
+  const customToken = await admin.auth().createCustomToken(userRecord.uid, { naverUserName: user['userName'], naverPhotoUrl: user['photoUrl'], naverUID: user['uid'], provider: "naver.com" });
   response.send(customToken);
 });
 

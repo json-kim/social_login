@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:logger/logger.dart';
 import 'package:social_login/domain/repository/fauth_repository.dart';
 import 'package:social_login/domain/repository/oauth_api_repository.dart';
 import 'package:social_login/domain/repository/token_repository.dart';
@@ -42,5 +43,15 @@ class KakaoLoginUseCase {
 
     // 파이어베이스 인증
     await _auth.signInWithCustomToken(customToken);
+
+    // 유저정보 업데이트
+    final currentUser = _auth.currentUser;
+    final idTokenResult = await currentUser?.getIdTokenResult();
+
+    final claims = idTokenResult?.claims;
+    if (claims != null) {
+      await currentUser?.updateDisplayName(claims['kakaoUserName']);
+      await currentUser?.updatePhotoURL(claims['kakaoPhotoUrl']);
+    }
   }
 }
