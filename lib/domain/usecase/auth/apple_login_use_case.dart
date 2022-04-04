@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:logger/logger.dart';
 import 'package:social_login/domain/repository/oauth_sdk_repository.dart';
 
 class AppleLoginUseCase {
@@ -12,12 +13,12 @@ class AppleLoginUseCase {
     final authCredential = await _appleAuthRepository.login();
 
     // 파이어베이스 인증
-    final userCredential = await _auth.signInWithCredential(authCredential);
+    await _auth.signInWithCredential(authCredential);
 
     // 유저정보 업데이트
     final currentUser = _auth.currentUser;
     final userInfo = currentUser?.providerData
-        .firstWhere((info) => info.providerId == 'google.com');
+        .firstWhere((info) => info.providerId == 'apple.com');
 
     if (userInfo != null) {
       await currentUser?.updateDisplayName(userInfo.displayName);

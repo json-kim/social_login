@@ -1,4 +1,6 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:social_login/domain/model/user_model.dart';
 import 'package:social_login/domain/usecase/auth/apple_login_use_case.dart';
 import 'package:social_login/domain/usecase/auth/google_login_use_case.dart';
 import 'package:social_login/domain/usecase/auth/kakao_login_use_case.dart';
@@ -13,6 +15,13 @@ class AuthViewModel with ChangeNotifier {
   final KakaoLoginUseCase _kakaoLoginUseCase;
   final NaverLoginUseCase _naverLoginUseCase;
   final LogoutUseCase _logoutUseCase;
+  final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
+
+  UserModel get user => UserModel(
+        email: _firebaseAuth.currentUser?.email ?? '',
+        userName: _firebaseAuth.currentUser?.displayName ?? '',
+        photoUrl: _firebaseAuth.currentUser?.photoURL ?? '',
+      );
 
   AuthViewModel(
     this._googleLoginUseCase,
@@ -37,18 +46,22 @@ class AuthViewModel with ChangeNotifier {
 
   Future<void> _loginWithGoogle() async {
     await _googleLoginUseCase();
+    notifyListeners();
   }
 
   Future<void> _loginWithApple() async {
     await _appleLoginUseCase();
+    notifyListeners();
   }
 
   Future<void> _loginWithKakao() async {
     await _kakaoLoginUseCase();
+    notifyListeners();
   }
 
   Future<void> _loginWithNaver() async {
     await _naverLoginUseCase();
+    notifyListeners();
   }
 
   Future<void> _loginWithFacebook() async {}

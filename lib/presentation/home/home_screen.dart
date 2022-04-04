@@ -10,7 +10,7 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final viewModel = context.watch<HomeViewModel>();
+    final viewModel = context.watch<AuthViewModel>();
     return Scaffold(
       appBar: AppBar(
         title: Text('홈 화면'),

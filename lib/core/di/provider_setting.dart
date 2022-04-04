@@ -16,7 +16,6 @@ import 'package:social_login/data/repository/google_auth_repository_impl.dart';
 import 'package:social_login/data/repository/kakao_auth_repository_impl.dart';
 import 'package:social_login/data/repository/naver_auth_repository_impl.dart';
 import 'package:social_login/data/repository/token_repository_impl.dart';
-import 'package:social_login/data/repository/user_repository_impl.dart';
 import 'package:social_login/domain/usecase/auth/apple_login_use_case.dart';
 import 'package:social_login/domain/usecase/auth/google_login_use_case.dart';
 import 'package:social_login/domain/usecase/auth/kakao_login_use_case.dart';
@@ -39,29 +38,31 @@ Future<List<SingleChildWidget>> setProviders() async {
   // 레포지토리
   final fauthRepository = FAuthRepositoryImpl(firebaseAuthRemoteDataSource);
   final tokenRepository = TokenRepositoryImpl(tokenLocalDataSource);
-  final userRepository = UserRepositoryImpl(userLocalDataSource);
-  final kakaoRepository = KakaoAuthRepositoryImpl(kakaoAuthApi, kakaoUserApi);
-  final naverRepository = NaverAuthRepositoryImpl(naverAuthApi, naverUserApi);
+  final kakaoRepository = KakaoAuthRepositoryImpl(
+    kakaoAuthApi,
+    kakaoUserApi,
+    tokenLocalDataSource,
+  );
+  final naverRepository = NaverAuthRepositoryImpl(
+    naverAuthApi,
+    naverUserApi,
+    tokenLocalDataSource,
+  );
   final googleRepository = GoogleAuthRepositoryImpl(googleAuthApi);
   final appleRepository = AppleAuthRepositoryImpl(appleAuthApi);
 
   // 유스케이스
   final kakaoLoginUseCase = KakaoLoginUseCase(
     kakaoRepository,
-    tokenRepository,
-    userRepository,
     fauthRepository,
   );
   final naverLoginUseCase = NaverLoginUseCase(
     naverRepository,
-    tokenRepository,
-    userRepository,
     fauthRepository,
   );
   final googleLoginUseCase = GoogleLoginUseCase(googleRepository);
   final appleLoginUseCase = AppleLoginUseCase(appleRepository);
   final logoutUseCase = LogoutUseCase(
-    tokenRepository,
     googleRepository,
     appleRepository,
     kakaoRepository,

@@ -12,7 +12,7 @@ class GoogleLoginUseCase {
     final authCredential = await _googleAuthRepository.login();
 
     // 파이어베이스 인증
-    final userCredential = await _auth.signInWithCredential(authCredential);
+    await _auth.signInWithCredential(authCredential);
 
     // 유저정보 업데이트
     final currentUser = _auth.currentUser;

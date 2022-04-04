@@ -6,7 +6,6 @@ import 'package:social_login/domain/repository/oauth_sdk_repository.dart';
 import 'package:social_login/domain/repository/token_repository.dart';
 
 class LogoutUseCase {
-  final TokenRepository _tokenRepository;
   final OAuthSdkRepository _googleAuthRepository;
   final OAuthSdkRepository _appleAuthRepository;
   final OAuthApiRepository _kakaoAuthRepository;
@@ -14,7 +13,6 @@ class LogoutUseCase {
   final _firebaseAuth = FirebaseAuth.instance;
 
   LogoutUseCase(
-    this._tokenRepository,
     this._googleAuthRepository,
     this._appleAuthRepository,
     this._kakaoAuthRepository,
